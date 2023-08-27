@@ -1,5 +1,6 @@
 from sklearn.utils import shuffle
 from loadData import *
+import json
 
 # 合并训练集和测试集的数据和标签
 all_text = train_text + test_text
@@ -37,17 +38,12 @@ avg_length_train, max_length_train, min_length_train = calculate_lengths(train_t
 avg_length_val, max_length_val, min_length_val = calculate_lengths(val_text)
 avg_length_test, max_length_test, min_length_test = calculate_lengths(test_text_split)
 
-# 打印统计结果
-print("Training Set:")
-print("Positive samples:", sum(train_label_split), "Negative samples:", len(train_label_split) - sum(train_label_split))
-print("Average length:", avg_length_train, "Max length:", max_length_train, "Min length:", min_length_train)
-print()
+# 保存数据到文件
+data = {
+    "train": {"text": train_text_split, "label": train_label_split},
+    "validation": {"text": val_text, "label": val_label},
+    "test": {"text": test_text_split, "label": test_label_split}
+}
 
-print("Validation Set:")
-print("Positive samples:", sum(val_label), "Negative samples:", len(val_label) - sum(val_label))
-print("Average length:", avg_length_val, "Max length:", max_length_val, "Min length:", min_length_val)
-print()
-
-print("Test Set:")
-print("Positive samples:", sum(test_label_split), "Negative samples:", len(test_label_split) - sum(test_label_split))
-print("Average length:", avg_length_test, "Max length:", max_length_test, "Min length:", min_length_test)
+with open("data.json", "w") as outfile:
+    json.dump(data, outfile)
