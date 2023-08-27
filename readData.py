@@ -18,14 +18,14 @@ val_label = loaded_data["validation"]["label"]
 test_text = loaded_data["test"]["text"]
 test_label = loaded_data["test"]["label"]
 
-# 打印训练集中的第一条数据
-print("Train Text:", train_text[0])
-print("Train Label:", train_label[0])
-
-# 打印验证集中的第一条数据
-print("Validation Text:", val_text[0])
-print("Validation Label:", val_label[0])
-
-# 打印测试集中的第一条数据
-print("Test Text:", test_text[0])
-print("Test Label:", test_label[0])
+# # 打印训练集中的第一条数据
+# print("Train Text:", train_text[0])
+# print("Train Label:", train_label[0])
+#
+# # 打印验证集中的第一条数据
+# print("Validation Text:", val_text[0])
+# print("Validation Label:", val_label[0])
+#
+# # 打印测试集中的第一条数据
+# print("Test Text:", test_text[0])
+# print("Test Label:", test_label[0])
