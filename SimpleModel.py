@@ -1,8 +1,8 @@
 import torch
 from torch import nn
 from torch.utils.data import DataLoader
-from torchvision import datasets
 from torchvision.transforms import ToTensor
+from customDataset import CustomDataset
 
 
 # Define model
@@ -13,7 +13,7 @@ class NeuralNetwork(nn.Module):
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(28 * 28, 512),
             nn.ReLU(),
-            nn.Linear(512, 512), # 输入512个神经元，输出512个神经元
+            nn.Linear(512, 512),  # 输入512个神经元，输出512个神经元
             nn.ReLU(),
             nn.Linear(512, 10)
         )
@@ -31,8 +31,8 @@ def train(dataloader, model, loss_fn, optimizer):  # 模型训练过程的定义
         X, y = X.to(device), y.to(device)
 
         # Compute prediction error
-        pred = model(X) # 获取模型的预测结果
-        loss = loss_fn(pred, y) # 计算预测误差
+        pred = model(X)  # 获取模型的预测结果
+        loss = loss_fn(pred, y)  # 计算预测误差
 
         # Backpropagation
         loss.backward()  # 计算梯度
@@ -53,7 +53,7 @@ def test(dataloader, model, loss_fn):  # 模型测试过程的定义
         for X, y in dataloader:
             X, y = X.to(device), y.to(device)  # 将数据移到设备上
             pred = model(X)  # 获取模型的预测结果
-            test_loss += loss_fn(pred, y).item() # pred 是模型的预测输出，y 是真实标签。loss 是计算得到的交叉熵损失值，表示模型预测与真实标签之间的差异程度。
+            test_loss += loss_fn(pred, y).item()  # pred 是模型的预测输出，y 是真实标签。loss 是计算得到的交叉熵损失值，表示模型预测与真实标签之间的差异程度。
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
@@ -62,22 +62,9 @@ def test(dataloader, model, loss_fn):  # 模型测试过程的定义
 
 if __name__ == '__main__':
     # Download training data from open datasets.
-    training_data = datasets.FashionMNIST(
-        # 此处要定义一个自己的traindata = customIMDBDataset(……)
-        # 要转换成TF IDF报告
-        # 定义一个dataset类：init函数和getItem函数
-        root="data",
-        train=True,
-        download=True,
-        transform=ToTensor(),
-    )
+    training_data = CustomDataset('train.csv', transform=ToTensor())
     # Download test data from open datasets.
-    test_data = datasets.FashionMNIST(
-        root="data",
-        train=False,
-        download=True,
-        transform=ToTensor(),
-    )
+    test_data = CustomDataset('test.csv', transform=ToTensor())
 
     batch_size = 64
 
@@ -96,7 +83,7 @@ if __name__ == '__main__':
 
     model = NeuralNetwork().to(device)
 
-    loss_fn = nn.CrossEntropyLoss() # 损失函数用于衡量模型的预测结果与真实标签之间的差距，或者说是预测的准确程度
+    loss_fn = nn.CrossEntropyLoss()  # 损失函数用于衡量模型的预测结果与真实标签之间的差距，或者说是预测的准确程度
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
     epochs = 5
