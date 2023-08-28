@@ -6,7 +6,7 @@ from torch.autograd import Variable
 class MyLSTM(nn.Module):
     # input_size:这是输入数据的特征维度。每个句子的词向量表示是输入数据的特征
     # hidden_dim:这是 LSTM 中隐藏状态的维度，也称为 LSTM 单元中的单元数。较大的隐藏状态维度可以捕捉更复杂的模式，但也可能导致更多的计算开销。
-    def __init__(self, input_size, hidden_dim, output_size):
+    def __init__(self, input_size, hidden_dim):
         super(MyLSTM, self).__init__()
 
         self.input_dim = input_size

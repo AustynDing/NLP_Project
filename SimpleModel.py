@@ -3,6 +3,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 from torchvision.transforms import ToTensor
 from customDataset import CustomDataset
+from MyLSTM import MyLSTM
 
 
 # Define model
@@ -62,9 +63,9 @@ def test(dataloader, model, loss_fn):  # 模型测试过程的定义
 
 if __name__ == '__main__':
     # Download training data from open datasets.
-    training_data = CustomDataset('train.csv', transform=ToTensor())
+    training_data = CustomDataset('train.csv')
     # Download test data from open datasets.
-    test_data = CustomDataset('test.csv', transform=ToTensor())
+    test_data = CustomDataset('test.csv')
 
     batch_size = 64
 
@@ -81,7 +82,7 @@ if __name__ == '__main__':
     )
     print(f"Using {device} device")
 
-    model = NeuralNetwork().to(device)
+    model = MyLSTM(20, 2).to(device)
 
     loss_fn = nn.CrossEntropyLoss()  # 损失函数用于衡量模型的预测结果与真实标签之间的差距，或者说是预测的准确程度
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)

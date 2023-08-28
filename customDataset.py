@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import torch
 from torch.utils.data.dataset import Dataset
 
 
@@ -20,8 +21,8 @@ class CustomDataset(Dataset):
     # 我们的评论数据中，x 是转换之后的 word vector 数组，y 是极性标签
     # 我们的数据集比这个示例要简单，可以直接在__init__中将所有数据以数组读出来，然后在__getitem__中用 idx 获取就行了
     def __getitem__(self, idx):
-        vector = np.array(self.data.loc[idx, 'vector'].strip('[]').split())
-        print(vector.ndim)
+        li = self.data.loc[idx, 'vector'].strip('[]').split()
+        vector = torch.from_numpy(np.array(li, dtype=np.float64))
         # 解析 CSV 中的向量字符串为 NumPy 数组
         # vector = vector_str.strip('[]').split()
         # print(vector_str,vector)
