@@ -25,6 +25,9 @@ class MyLSTM(nn.Module):
         # input 是传递给 lstm 的输入，它的 shape 应该是（每一个文本的词语数量，batch size，词向量维度）
         # 输入的时候需要将 input 构造成
         self.hidden = self.init_hidden(x.size(0))  # input.size(0)得到 batch_size
+        # x = x.view(len(x), 1, -1).to(torch.float32)  # 通过使用view直接修改维度，并修改精度
+        # https://blog.csdn.net/weixin_35757704/article/details/118384899
+        # https://blog.csdn.net/qq_19841133/article/details/127824863
         lstm_out, self.hidden = self.lstm(x, self.hidden)
         output = self.fc(lstm_out)
         lstm_out = self.softmax(output)

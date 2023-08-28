@@ -23,11 +23,13 @@ class CustomDataset(Dataset):
     def __getitem__(self, idx):
         li = self.data.loc[idx, 'vector'].strip('[]').split()
         vector = torch.from_numpy(np.array(li, dtype=np.float64))
+        vector = vector.unsqueeze(0).to(torch.float32)
+        # unsqueeze() 方法可以在指定的维度上插入一个大小为 1 的维度，从而将一维张量变为二维张量。
         # 解析 CSV 中的向量字符串为 NumPy 数组
         # vector = vector_str.strip('[]').split()
         # print(vector_str,vector)
-        label = int(self.data.loc[idx, 'label'])
-
+        label = torch.tensor(self.data.loc[idx, 'label'])
+        label = label.unsqueeze(0)
         if self.transform:
             vector = self.transform(vector)
         if self.target_transform:
