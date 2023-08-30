@@ -33,6 +33,7 @@ def train(dataloader, model, loss_fn, optimizer):  # 模型训练过程的定义
 
         # Compute prediction error
         pred = model(X)  # 获取模型的预测结果
+        # print('pred: ', pred, 'y: ', y)
         loss = loss_fn(pred, y)  # 计算预测误差
 
         # Backpropagation
@@ -55,7 +56,7 @@ def test(dataloader, model, loss_fn):  # 模型测试过程的定义
             X, y = X.to(device), y.to(device)  # 将数据移到设备上
             pred = model(X)  # 获取模型的预测结果
             test_loss += loss_fn(pred, y).item()  # pred 是模型的预测输出，y 是真实标签。loss 是计算得到的交叉熵损失值，表示模型预测与真实标签之间的差异程度。
-            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+            correct += (pred == y).type(torch.float).sum().item()
     test_loss /= num_batches
     correct /= size
     print(f"Test Error: \n Accuracy: {(100 * correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
@@ -82,9 +83,13 @@ if __name__ == '__main__':
     )
     print(f"Using {device} device")
 
-    model = MyLSTM(20, 2).to(device)
+    input_size = 20  # 词向量维度
+    hidden_size = 128  # 隐藏层维度
+    num_layers = 2  # LSTM 层数
+    output_size = 1  # 输出维度，二分类问题
+    model = MyLSTM(input_size, hidden_size, num_layers, output_size).to(device)
 
-    loss_fn = nn.CrossEntropyLoss()  # 损失函数用于衡量模型的预测结果与真实标签之间的差距，或者说是预测的准确程度
+    loss_fn = nn.BCELoss()  # 损失函数用于衡量模型的预测结果与真实标签之间的差距，或者说是预测的准确程度
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
 
     epochs = 5
@@ -97,23 +102,10 @@ if __name__ == '__main__':
     torch.save(model.state_dict(), "model/haha")
     print("Saved PyTorch Model State to the project root folder!")
 
-    classes = [
-        "T-shirt/top",
-        "Trouser",
-        "Pullover",
-        "Dress",
-        "Coat",
-        "Sandal",
-        "Shirt",
-        "Sneaker",
-        "Bag",
-        "Ankle boot",
-    ]
-
     model.eval()
-    x, y = test_data[0][0], test_data[0][1]
-    with torch.no_grad():
-        x = x.to(device)
-        pred = model(x)
-        predicted, actual = classes[pred[0].argmax(0)], classes[y]
-        print(f'Predicted: "{predicted}", Actual: "{actual}"')
+    # x, y = test_data[0][0], test_data[0][1]
+    # with torch.no_grad():
+    #     x = x.to(device)
+    #     pred = model(x)
+    #     predicted, actual = classes[pred[0].argmax(0)], classes[y]
+    #     print(f'Predicted: "{predicted}", Actual: "{actual}"')
