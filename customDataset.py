@@ -29,7 +29,14 @@ class CustomDataset(Dataset):
         # vector = vector_str.strip('[]').split()
         # print(vector_str,vector)
         label = torch.tensor(self.data.loc[idx, 'label'])
-        label = label.unsqueeze(0)
+        # label = label.unsqueeze(0)
+        # label = torch.nn.functional.one_hot(label, num_classes=2)
+
+        # if label == 1:
+        #     label = torch.tensor([1, 0])
+        # else:
+        #     label = torch.tensor([0, 1])
+        label = label.to(torch.float32)  # 和pred = model(x) 进行单位的统一
         if self.transform:
             vector = self.transform(vector)
         if self.target_transform:
