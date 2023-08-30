@@ -20,7 +20,6 @@ def load_imdb(is_training):
             tf = tarf.next()  # 显示下一个文件信息
             while tf != None:
                 if bool(path_pattern.match(tf.name)):
-                    # print('tf.name:',tf.name)
                     sentence = tarf.extractfile(tf).read().decode()  # 从tf文件中提取文件，读取内容并解码
                     sentence_label = 0 if label == 'neg' else 1
                     text_set.append(sentence)

@@ -15,10 +15,3 @@ model = Word2Vec(train_text, vector_size=20, window=2, min_count=3, epochs=5, ne
 # print(model.wv.most_similar('has', topn=20))  # 与Nation最相关的前20个词语
 # 保存模型
 model.save("word2vec.model")
-
-# vector = model.wv['computer']
-# print(vector)
-# [ 0.31186014 -0.17845365  1.0966598  -0.10880593 -0.05730803  0.02422507
-#   0.41112718  0.9443151  -0.36718005  0.55546355  0.77747893  0.32190266
-#  -0.3869654  -0.13872573  0.19698325 -0.3372114   0.87689173 -0.55207354
-#   0.18718082 -0.71431994]
