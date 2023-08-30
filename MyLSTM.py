@@ -3,6 +3,14 @@ from torch import nn
 from torch.autograd import Variable
 
 
+# 按照阈值进行分类
+def getBinaryTensor(tensor, boundary=0.5):
+    one = torch.ones_like(tensor)
+    zero = torch.zeros_like(tensor)
+    binary_tensor = torch.where(tensor > boundary, one, zero)
+    return binary_tensor
+
+
 class MyLSTM(nn.Module):
     # input_size:这是输入数据的特征维度。每个句子的词向量表示是输入数据的特征
     # hidden_dim:这是 LSTM 中隐藏状态的维度，也称为 LSTM 单元中的单元数。较大的隐藏状态维度可以捕捉更复杂的模式，但也可能导致更多的计算开销。
@@ -30,9 +38,12 @@ class MyLSTM(nn.Module):
         # https://blog.csdn.net/qq_19841133/article/details/127824863
         lstm_out, _ = self.lstm(x, self.hidden)
         lstm_out = self.fc(lstm_out[:, -1, :])
-        lstm_out = self.softmax(lstm_out)
-        # print(lstm_out.squeeze(), 'here')
-        return lstm_out.squeeze()  # 查看文档，了解 lstm_out 到底是什么 使用squeeze对维数进行压缩
+        lstm_out = torch.sigmoid(lstm_out)  # Sigmoid激活函数处理后的输出值（0到1之间的概率）代表了模型对样本属于正类的置信度。
+        lstm_out = getBinaryTensor(lstm_out, torch.mean(lstm_out).item())  # 使用平均值作为阈值，将概率映射到0或者1上
+        # lstm_out = self.softmax(lstm_out)
+        lstm_out = lstm_out.squeeze()  # 使用squeeze对维数进行压缩
+        # print(lstm_out, lstm_out.shape)  #
+        return lstm_out  # 查看文档，了解 lstm_out 到底是什么
 
 # "batch size"（批次大小）是深度学习中一个重要的超参数，它定义了在训练过程中一次迭代所使用的样本数量。
 # 具体来说，每个迭代步骤中，模型会根据给定的批次大小从训练数据中随机选择一组样本进行前向传播、计算损失和反向传播。

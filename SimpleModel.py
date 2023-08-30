@@ -17,6 +17,9 @@ def train(dataloader, model, loss_fn, optimizer):  # 模型训练过程的定义
         loss = loss_fn(pred, y)  # 计算预测误差
 
         # Backpropagation
+        loss.requires_grad = True
+        # 解决RuntimeError: element 0 of tensors does not require grad and does not have a grad_fn 报错问题
+        loss.retain_grad()
         loss.backward()  # 计算梯度
         optimizer.step()  # 更新模型参数
         optimizer.zero_grad()  # 清零梯度
@@ -80,4 +83,3 @@ if __name__ == '__main__':
 
     torch.save(model.state_dict(), "model/haha")
     print("Saved PyTorch Model State to the project root folder!")
-
